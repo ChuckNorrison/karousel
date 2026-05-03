@@ -195,6 +195,11 @@ const configDef = [
         default: false,
     },
     {
+        name: "multiMonitorMode",
+        type: "String",
+        default: "perScreen",
+    },
+    {
         name: "windowRules",
         type: "String",
         default: defaultWindowRules,

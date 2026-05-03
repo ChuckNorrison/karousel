@@ -172,6 +172,30 @@
                             </item>
 
                             <item>
+                                <widget class="QGroupBox">
+                                    <property name="title">
+                                        <string>Multi-Monitor Mode</string>
+                                    </property>
+                                    <layout class="QVBoxLayout">
+                                        <item>
+                                            <widget class="QRadioButton" name="kcfg_multiMonitorModePerScreen">
+                                                <property name="text">
+                                                    <string>Per Screen (default)</string>
+                                                </property>
+                                            </widget>
+                                        </item>
+                                        <item>
+                                            <widget class="QRadioButton" name="kcfg_multiMonitorModeCross">
+                                                <property name="text">
+                                                    <string>Cross-Monitor Unified Grid</string>
+                                                </property>
+                                            </widget>
+                                        </item>
+                                    </layout>
+                                </widget>
+                            </item>
+
+                            <item>
                                 <spacer name="spacer_footer">
                                     <property name="orientation">
                                         <enum>Qt::Vertical</enum>

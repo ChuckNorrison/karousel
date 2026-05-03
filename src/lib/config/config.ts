@@ -27,4 +27,5 @@ interface Config {
     windowRules: string;
     tiledDesktops: string;
     enabledScreens: number[];
+    multiMonitorMode: "perScreen" | "cross";
 }
