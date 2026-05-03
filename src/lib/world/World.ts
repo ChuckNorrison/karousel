@@ -68,6 +68,7 @@ class World {
                 gestureScrollInvert: config.gestureScrollInvert,
                 gestureScrollStep: config.gestureScrollStep,
                 enabledScreens: config.enabledScreens,
+                crossMonitor: config.multiMonitorMode === "cross",
             },
             layoutConfig,
             focusPasser,

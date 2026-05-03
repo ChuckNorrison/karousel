@@ -15,5 +15,7 @@ function loadConfig(): Config {
         config.enabledScreens = enabledStr.split(",").map((s: string) => parseInt(s.trim())).filter((n: number) => !isNaN(n));
     }
 
+    config.multiMonitorMode = config.multiMonitorMode === "cross" ? "cross" : "perScreen";
+
     return config;
 }

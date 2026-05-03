@@ -19,6 +19,14 @@ function rectEquals(a: QmlRect, b: QmlRect) {
         a.height === b.height;
 }
 
+function rectUnion(a: QmlRect, b: QmlRect) {
+    const left = Math.min(a.x, b.x);
+    const top = Math.min(a.y, b.y);
+    const right = Math.max(rectRight(a), rectRight(b));
+    const bottom = Math.max(rectBottom(a), rectBottom(b));
+    return Qt.rect(left, top, right - left, bottom - top);
+}
+
 function pointEquals(a: QmlPoint, b: QmlPoint) {
     return a.x === b.x &&
         a.y === b.y;

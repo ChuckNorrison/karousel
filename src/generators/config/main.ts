@@ -4,8 +4,9 @@ console.log(`<?xml version="1.0" encoding="UTF-8"?>
     <group name="">`);
 
 for (const entry of configDef) {
+    const choicesBlock = formatChoices(entry);
     console.log(`        <entry name="${entry.name}" type="${entry.type}">
-            <default>${escapeXml(entry.default)}</default>
+            <default>${escapeXml(entry.default)}</default>${choicesBlock}
         </entry>`);
 }
 
@@ -21,4 +22,30 @@ function escapeXml(input: any) {
     } else {
         return input;
     }
+}
+
+function choiceDisplayLabel(entryName: string, value: string) {
+    if (entryName === "multiMonitorMode") {
+        if (value === "perScreen") {
+            return "Per Screen (default)";
+        }
+        if (value === "cross") {
+            return "Cross-Monitor Unified Grid";
+        }
+    }
+    return value;
+}
+
+function formatChoices(entry: { name: string; enum?: string[] }) {
+    const choices = entry.enum;
+    if (choices === undefined || choices.length === 0) {
+        return "";
+    }
+    let out = "\n            <choices>";
+    for (const value of choices) {
+        const label = choiceDisplayLabel(entry.name, value);
+        out += `\n                <choice name="${escapeXml(value)}">${escapeXml(label)}</choice>`;
+    }
+    out += "\n            </choices>";
+    return out;
 }

@@ -22,12 +22,12 @@ class Desktop {
         this.dirtyScroll = true;
         this.dirtyPins = true;
         this.grid = new Grid(this, layoutConfig, focusPasser);
-        this.clientArea = Desktop.getClientArea(this.getScreen(), kwinDesktop);
+        this.clientArea = Desktop.computeClientArea(this.getScreen, this.kwinDesktop, config);
         this.tilingArea = Desktop.getTilingArea(this.clientArea, kwinDesktop, pinManager, config);
     }
 
     private updateArea() {
-        const newClientArea = Desktop.getClientArea(this.getScreen(), this.kwinDesktop);
+        const newClientArea = Desktop.computeClientArea(this.getScreen, this.kwinDesktop, this.config);
         if (rectEquals(newClientArea, this.clientArea) && !this.dirtyPins) {
             return;
         }
@@ -40,8 +40,31 @@ class Desktop {
         this.autoAdjustScroll();
     }
 
-    private static getClientArea(screen: Output, kwinDesktop: KwinDesktop) {
-        return Workspace.clientArea(ClientAreaOption.PlacementArea, screen, kwinDesktop);
+    private static computeClientArea(getScreen: () => Output, kwinDesktop: KwinDesktop, config: Desktop.Config) {
+        if (config.crossMonitor) {
+            return Desktop.getCombinedClientArea(kwinDesktop, config.enabledScreens);
+        }
+        return Workspace.clientArea(ClientAreaOption.PlacementArea, getScreen(), kwinDesktop);
+    }
+
+    private static getCombinedClientArea(kwinDesktop: KwinDesktop, enabledScreens: number[]) {
+        const screens = Workspace.screens !== undefined && Workspace.screens.length > 0
+            ? Workspace.screens
+            : [Workspace.activeScreen];
+        const enabled = Array.isArray(enabledScreens) ? enabledScreens : [];
+        const allowAll = enabled.length === 0 || enabled.includes(-1);
+        let union: QmlRect | null = null;
+        for (let i = 0; i < screens.length; i++) {
+            if (!allowAll && !enabled.includes(i)) {
+                continue;
+            }
+            const area = Workspace.clientArea(ClientAreaOption.PlacementArea, screens[i], kwinDesktop);
+            union = union === null ? area : rectUnion(union, area);
+        }
+        if (union === null) {
+            return Workspace.clientArea(ClientAreaOption.PlacementArea, Workspace.activeScreen, kwinDesktop);
+        }
+        return union;
     }
 
     private static getTilingArea(clientArea: QmlRect, kwinDesktop: KwinDesktop, pinManager: PinManager, config: Desktop.Config) {
@@ -199,6 +222,7 @@ namespace Desktop {
         scroller: Desktop.Scroller;
         clamper: Desktop.Clamper;
         enabledScreens: number[];
+        crossMonitor: boolean;
     }
 
     export class ColumnRange {

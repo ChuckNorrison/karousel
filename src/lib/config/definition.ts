@@ -196,8 +196,9 @@ const configDef = [
     },
     {
         name: "multiMonitorMode",
-        type: "String",
         default: "perScreen",
+        type: "String",
+        enum: ["perScreen", "cross"],
     },
     {
         name: "windowRules",

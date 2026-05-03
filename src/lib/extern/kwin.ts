@@ -27,6 +27,9 @@ interface Workspace {
     readonly currentActivityChanged: QSignal<[]>;
     readonly virtualScreenSizeChanged: QSignal<[]>;
 
+    /** Present on KWin scripting Workspace when multi-output support is available. */
+    readonly screens?: Output[];
+
     clientArea(option: ClientAreaOption, output: Output, kwinDesktop: KwinDesktop): QmlRect;
 }
 
